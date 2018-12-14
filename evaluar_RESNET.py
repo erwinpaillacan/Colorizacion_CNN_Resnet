@@ -18,7 +18,7 @@ model.load_weights('weights/pesos_resnet__total_loss__lr_1e-3.h5')
 X = []
 files = os.listdir(IMAGE_FOLDER_PATH)
 
-files = files[:100]
+#files = files[:100]
 for i, filename in enumerate(files):
     img = img_to_array(load_img(os.path.join(IMAGE_FOLDER_PATH, filename))) / 255.
     img = resize(img, (image_size, image_size, 3)) * 255.  # resize needs floats to be in 0-1 range, preprocess needs in 0-255 range

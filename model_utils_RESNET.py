@@ -74,13 +74,7 @@ def total_loss(y_true, y_pred):
 
 
 def generate_RESNET_model(lr=1e-3, img_size=128):
-    '''
-    Creates a Colorizer model. Note the difference from the report
-    - https://github.com/baldassarreFe/deep-koalarization/blob/master/report.pdf
 
-    I use a long skip connection network to speed up convergence and
-    boost the output quality.
-    '''
     embed_input = Input(shape=(1000,))
     # Encoder
     encoder_input = Input(shape=(img_size, img_size, 1,))
