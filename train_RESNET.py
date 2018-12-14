@@ -9,8 +9,8 @@ from keras.callbacks import EarlyStopping
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
 nb_train_images = 128 # con cuantas imagenes se quiere entrenar
 batch_size = 16 #se toman de poco
-epocas=1000 #cuantas veces se pasa re recorre el dataset
-model = generate_RESNET_model(lr=0.1e-3)
+epocas=10000 #cuantas veces se pasa re recorre el dataset
+model = generate_RESNET_model(lr=1e-4)
 model.summary()
 
 
@@ -19,7 +19,7 @@ model.summary()
 tensorboard = TensorBoardBatch(batch_size=batch_size)
 checkpoint = ModelCheckpoint('weights/pesos_resnet_mse_l_1e-4.h5', monitor='loss', verbose=1,
                              save_best_only=True, save_weights_only=True)
-early_stopping =EarlyStopping(monitor='val_loss', min_delta=0.0000001, patience=100,
+early_stopping =EarlyStopping(monitor='val_loss', min_delta=0.0000001, patience=200,
                               verbose=0, mode='auto', baseline=None, restore_best_weights=False)
 callbacks = [checkpoint, early_stopping, tensorboard]
 
