@@ -24,7 +24,7 @@ dir=os.getcwd()
 TRAIN_IMAGE_PATH = dir+'/train'
 VALIDATION_IMAGE_PATH = dir+'/validation'
 
-IMAGE_SIZE = 128  # Global constant image size
+IMAGE_SIZE = 256  # Global constant image size
 EMBEDDING_IMAGE_SIZE = 224  # Global constant embedding size
 
 TRAIN_RECORDS_PATH = "data/images.tfrecord"  # local path to tf record directory
@@ -42,7 +42,8 @@ if not os.path.exists('data/'):
 
 
 ###################################### FUNCIONES RESNET ##########################
-inception = InceptionResNetV2(weights='imagenet', include_top=True)
+inception = InceptionResNetV2(weights=None, include_top=True)
+inception.load_weights(dir+'/data/inception_resnet_v2_weights_tf_dim_ordering_tf_kernels.h5')
 inception.graph = tf.get_default_graph()
 
 def create_inception_embedding(grayscaled_rgb):

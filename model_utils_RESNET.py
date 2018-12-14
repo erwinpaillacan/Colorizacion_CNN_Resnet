@@ -8,7 +8,7 @@ from keras.optimizers import Adam
 mse_weight = 1.0 #1e-3
 
 # set these to zeros to prevent learning
-perceptual_weight = 1. / (2. * 128. * 128.) # scaling factor
+perceptual_weight = 1. / (2. * 256. * 256.) # scaling factor
 attention_weight = 1.0 # 1.0
 
 
@@ -73,7 +73,7 @@ def total_loss(y_true, y_pred):
     return mse_loss + perceptual_loss + attention_loss
 
 
-def generate_RESNET_model(lr=1e-3, img_size=128):
+def generate_RESNET_model(lr=1e-3, img_size=256):
 
     embed_input = Input(shape=(1000,))
     # Encoder
@@ -87,10 +87,10 @@ def generate_RESNET_model(lr=1e-3, img_size=128):
     encoder_output = Conv2D(512, (3, 3), activation='relu', padding='same')(encoder_output)
     encoder_output = Conv2D(256, (3, 3), activation='relu', padding='same')(encoder_output)
 
-    batch, height, width, channels = K.int_shape(encoder_output)
+
     # Fusion: Donde entra la magia de Resnet
-    fusion_output = RepeatVector(height * width)(embed_input)
-    fusion_output = Reshape(([height, width, 1000]))(fusion_output)
+    fusion_output = RepeatVector(32 * 32)(embed_input)
+    fusion_output = Reshape(([32, 32, 1000]))(fusion_output)
     fusion_output = concatenate([encoder_output, fusion_output], axis=3)
     fusion_output = Conv2D(256, (1, 1), activation='relu', padding='same')(fusion_output)
 
@@ -105,7 +105,7 @@ def generate_RESNET_model(lr=1e-3, img_size=128):
     decoder_output = UpSampling2D((2, 2))(decoder_output)
 
     model = Model(inputs=[encoder_input, embed_input], outputs=decoder_output)
-    model.compile(optimizer=Adam(lr), loss=total_loss, metrics=[y_true_max,
+    model.compile(optimizer=Adam(lr), loss='mse', metrics=[y_true_max,
                                                                 y_true_min,
                                                                 y_pred_max,
                                                                 y_pred_min])

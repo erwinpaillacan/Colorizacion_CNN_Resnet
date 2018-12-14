@@ -9,7 +9,7 @@ import os
 dir=os.getcwd()
 
 IMAGE_FOLDER_PATH = dir+'/test'
-batch_size = 10
+batch_size = 16
 image_size = 256
 
 model = generate_RESNET_model(img_size=image_size)
