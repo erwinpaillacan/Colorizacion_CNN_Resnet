@@ -13,7 +13,7 @@ batch_size = 16
 image_size = 256
 
 model = generate_RESNET_model(img_size=image_size)
-model.load_weights('weights/pesos_resnet__total_loss__lr_1e-3.h5')
+model.load_weights('weights/pesos_resnet_mse_l_1e-4.h5')
 
 X = []
 files = os.listdir(IMAGE_FOLDER_PATH)

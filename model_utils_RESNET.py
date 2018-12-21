@@ -1,6 +1,6 @@
 from keras.layers import Conv2D, Input, Reshape, RepeatVector, concatenate, UpSampling2D, Flatten, Conv2DTranspose
 from keras.models import Model
-
+import tensorflow as tf
 from keras import backend as K
 from keras.losses import mean_squared_error
 from keras.optimizers import Adam
@@ -11,6 +11,14 @@ mse_weight = 1.0 #1e-3
 perceptual_weight = 1. / (2. * 256. * 256.) # scaling factor
 attention_weight = 1.0 # 1.0
 
+
+def loss_with_metrics(img_ab_out, img_ab_true, name=''):
+    # Loss is mean square erros
+    cost = tf.reduce_mean(
+        tf.squared_difference(img_ab_out, img_ab_true), name="mse")
+    # Metrics for tensorboard
+    #summary = tf.summary.scalar('cost ' + name, cost)
+    return cost
 
 # shows the minimum value of the AB channels
 def y_true_min(yt, yp):
@@ -98,14 +106,15 @@ def generate_RESNET_model(lr=1e-3, img_size=256):
     decoder_output = Conv2D(128, (3, 3), activation='relu', padding='same')(fusion_output)
     decoder_output = UpSampling2D((2, 2))(decoder_output)
     decoder_output = Conv2D(64, (3, 3), activation='relu', padding='same')(decoder_output)
+    decoder_output = Conv2D(64, (3, 3), activation='relu', padding='same')(decoder_output)
     decoder_output = UpSampling2D((2, 2))(decoder_output)
     decoder_output = Conv2D(32, (3, 3), activation='relu', padding='same')(decoder_output)
-    decoder_output = Conv2D(16, (3, 3), activation='relu', padding='same')(decoder_output)
+    #decoder_output = Conv2D(16, (3, 3), activation='relu', padding='same')(decoder_output)
     decoder_output = Conv2D(2, (3, 3), activation='tanh', padding='same')(decoder_output)  # el ultimo tanh es porque lab se mueve entre -128 y 128: se necesita los negativos
     decoder_output = UpSampling2D((2, 2))(decoder_output)
 
     model = Model(inputs=[encoder_input, embed_input], outputs=decoder_output)
-    model.compile(optimizer=Adam(lr), loss='mse', metrics=[y_true_max,
+    model.compile(optimizer=Adam(lr), loss=loss_with_metrics, metrics=[y_true_max,
                                                                 y_true_min,
                                                                 y_pred_max,
                                                                 y_pred_min])
@@ -118,6 +127,6 @@ if __name__ == '__main__':
     model = generate_RESNET_model()
     model.summary()
 
-    from keras.utils.vis_utils import plot_model
+    #from keras.utils.vis_utils import plot_model
 
-    plot_model(model, to_file='skip_model.png', show_shapes=True)
+    #plot_model(model, to_file='skip_model.png', show_shapes=True)

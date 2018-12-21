@@ -9,7 +9,7 @@ from keras.callbacks import EarlyStopping
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # or any {'0', '1', '2'}
 nb_train_images = 128 # con cuantas imagenes se quiere entrenar
 batch_size = 16 #se toman de poco
-epocas=10000 #cuantas veces se pasa re recorre el dataset
+epocas=1000 #cuantas veces se pasa re recorre el dataset
 model = generate_RESNET_model(lr=1e-4)
 model.summary()
 

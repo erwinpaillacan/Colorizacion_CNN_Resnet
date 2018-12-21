@@ -27,8 +27,8 @@ VALIDATION_IMAGE_PATH = dir+'/validation'
 IMAGE_SIZE = 256  # Global constant image size
 EMBEDDING_IMAGE_SIZE = 224  # Global constant embedding size
 
-TRAIN_RECORDS_PATH = "data/images.tfrecord"  # local path to tf record directory
-VAL_RECORDS_PATH = "data/val_images.tfrecord"  # local path to tf record directory
+TRAIN_RECORDS_PATH = "data/overfit/images.tfrecord"  # local path to tf record directory
+VAL_RECORDS_PATH = "data/overfit/val_images.tfrecord"  # local path to tf record directory
 
 
 if not os.path.exists('weights/'):
